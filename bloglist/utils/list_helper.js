@@ -1,26 +1,27 @@
-const { restart } = require("nodemon");
-const Blog = require("../models/blog");
+const { pick, countBy, map, maxBy, groupBy, sumBy } = require("lodash");
 
 const dummy = (blogs) => {
     return 1
 }
 
 const totalLikes = (blogs) => {
-    if (blogs.length === 0)
+    if (blogs.length === 0) {
         return 'Blog list is empty'
+    }
+    
     return blogs.reduce((sum, current) => sum += current.likes, 0);
 }
 
 const favoriteBlogs = (blogs) => {
-    if (blogs.length === 0)
+    if (blogs.length === 0) {
         return 'Blog list is empty'
-    
-    const blogWithMaxLikes = blogs.reduce((previous, current) => 
+    }
+
+    const blogWithMaxLikes = blogs.reduce((previous, current) =>
         current.likes > previous.likes ? current : previous
-       )
-    
-    const { _id, __v, url, ...filteredObject} = blogWithMaxLikes;
-    return filteredObject;
+    )
+
+    return pick(blogWithMaxLikes, ['title', 'author', 'likes']);
 }
 
 const blogs = [
@@ -71,11 +72,47 @@ const blogs = [
         url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
         likes: 2,
         __v: 0
+    },
+    {
+        _id: "5a422bc61b54a676234d17fa",
+        title: "Test",
+        author: "Simone Bergamin",
+        url: "",
+        likes: 12,
+        __v: 0
     }
 ]
+
+
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) {
+        return 'Blog list is empty'
+    }
+
+    const mappedMostBlogs = map(countBy(blogs, "author"), (val, key) => ({ author: key, blogs: val }))
+    return maxBy((mappedMostBlogs), "blogs")
+
+}
+
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) {
+        return 'Blog list is empty'
+    }
+
+    const groupedByAuthor = groupBy(blogs, "author")
+    const mappedGroupedByAuthor = map(groupedByAuthor, ((blog, author) => ({
+        author: author,
+        likes: sumBy(blog, 'likes')
+    })))
+
+    return maxBy(mappedGroupedByAuthor, "likes");
+
+}
 
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlogs
+    favoriteBlogs,
+    mostBlogs,
+    mostLikes
 }
