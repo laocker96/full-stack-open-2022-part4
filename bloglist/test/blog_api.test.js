@@ -19,6 +19,11 @@ test('there are seven blogs', async () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('unique identifier property of blogs is \'id\'', async () => {
+    const response = await api.get('/api/blogs')
+    response.body.forEach(blog => expect(blog.id).toBeDefined())
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
