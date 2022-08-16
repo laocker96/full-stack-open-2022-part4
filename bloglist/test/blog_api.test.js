@@ -1,4 +1,4 @@
-const { pick } = require('lodash')
+const { pick, last } = require('lodash')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -30,6 +30,12 @@ test('blog is saved correctly to the database', async () => {
     const blogsAfterSave = await helper.blogsInDb()
     expect(blogsAfterSave).toHaveLength(helper.initialBlogs.length + 1)
     expect(blogsAfterSave.map(blog => pick(blog, ['title', 'author', 'likes', 'url']))).toContainEqual(helper.newBlog)
+})
+
+test('if the likes property is missing from the request, it will default to the value 0', async () => {
+    await api.post('/api/blogs').send(helper.blogWithoutLikesProperty)
+    const blogsAfterSave = await helper.blogsInDb()
+    expect(last(blogsAfterSave).likes).toBe(0)
 })
 
 afterAll(() => {

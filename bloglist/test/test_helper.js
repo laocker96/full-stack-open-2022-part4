@@ -60,6 +60,12 @@ const newBlog = {
 
 }
 
+const blogWithoutLikesProperty = {
+    title: "This is a new blog without likes property",
+    author: "Simone Bergamin",
+    url: "",
+}
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
@@ -68,5 +74,6 @@ const blogsInDb = async () => {
 module.exports = {
     initialBlogs,
     newBlog,
+    blogWithoutLikesProperty,
     blogsInDb
 }
