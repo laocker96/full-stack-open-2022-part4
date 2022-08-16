@@ -38,6 +38,10 @@ test('if the likes property is missing from the request, it will default to the 
     expect(last(blogsAfterSave).likes).toBe(0)
 })
 
+test('if the title and url properties are missing then 400 Bad Request', async () => {
+    await api.post('/api/blogs').send(helper.blogWithoutTitleAndUrl).expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

@@ -66,6 +66,11 @@ const blogWithoutLikesProperty = {
     url: "",
 }
 
+const blogWithoutTitleAndUrl = {
+    authot: "Simone Bergamin",
+    likes: 50
+}
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
@@ -75,5 +80,6 @@ module.exports = {
     initialBlogs,
     newBlog,
     blogWithoutLikesProperty,
+    blogWithoutTitleAndUrl,
     blogsInDb
 }
