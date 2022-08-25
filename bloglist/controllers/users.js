@@ -10,10 +10,30 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
 
+    let errorMessage = '';
+
+    if (!username) {
+        errorMessage = errorMessage.concat('Username is required. ');
+    } else if (username?.length < 3) {
+        errorMessage = errorMessage.concat('Username must be at least 3 characters. ');
+    }
+
+    if (!password) {
+        errorMessage = errorMessage.concat('Password is required. ');
+    } else if (password?.length < 3) {
+        errorMessage = errorMessage.concat('Password must be at least 3 characters. ')
+    }
+
+    if (!username || !password || username.length < 3 || password.length < 3) {
+        return response.status(400).json({
+            error: errorMessage
+        })
+    }
+
     const existingUser = await User.findOne({ username })
     if (existingUser) {
         return response.status(400).json({
-            error: 'username must be unique'
+            error: 'Username must be unique.'
         })
     }
 
