@@ -85,6 +85,7 @@ const initialUsers = [
     }
 ]
 
+
 const user = {
     username: 'simone',
     password: 'passwordDifferent',
@@ -111,6 +112,11 @@ const userWithInvalidPassword = {
     username: 'simone',
     password: 'pa',
     name: 'Simone Bergamin'
+}
+
+const userToAuthenticate = {
+    username: 'simone',
+    password: 'password'
 }
 
 const usernameRequireError = {
@@ -150,6 +156,7 @@ module.exports = {
     userWithNoPassword,
     userWithInvalidUsername,
     userWithInvalidPassword,
+    userToAuthenticate,
     usernameRequireError,
     passwordRequireError,
     usernameMinLengthError,
