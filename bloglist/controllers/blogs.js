@@ -1,12 +1,12 @@
-const notesRouter = require('express').Router()
+const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-notesRouter.get('/', async (request, response) => {
+blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })
     response.json(blogs)
 })
 
-notesRouter.post('/', async (request, response) => {
+blogsRouter.post('/', async (request, response) => {
 
     const user = request.user
 
@@ -29,7 +29,7 @@ notesRouter.post('/', async (request, response) => {
     response.status(201).json(savedBlog)
 })
 
-notesRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', async (request, response) => {
 
     const blog = await Blog.findById(request.params.id).populate('user', { id: 1 });
 
@@ -42,9 +42,18 @@ notesRouter.delete('/:id', async (request, response) => {
 
 })
 
-notesRouter.put('/:id', async (request, response) => {
-    await Blog.findByIdAndUpdate(request.params.id, request.body, { new: true });
+blogsRouter.put('/:id', async (request, response) => {
+
+    const blog = {
+        title: request.body.title,
+        author: request.body.author,
+        url: request.body.url,
+        likes: request.body.likes,
+        user: request.body.user ? request.body.user.id : null
+    }
+
+    await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
     response.status(204).end()
 })
 
-module.exports = notesRouter
+module.exports = blogsRouter;
